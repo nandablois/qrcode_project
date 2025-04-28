@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gerador de QR Code</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    {% load static %}
+    <link rel="icon" href="{% static 'images/qrcode.png' %}" type="image/png">
+
+  </head>
+  <body
+    class="flex items-center justify-center bg-gradient-to-r from-purple-100 via-purple-300 to-purple-500 p-4"
+  >
+    <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md">
+      <h1 class="text-3xl font-bold text-center text-purple-800">
+        Gerador de QR Code
+      </h1>
+
+      <form method="post" class="space-y-6">
+        {% csrf_token %}
+        <h1 class="font-bold text-purple-800">Insira uma URL válida:</h1>
+
+        {% if error_message %}
+        <div class="text-red-500 text-sm font-semibold mb-4">
+          {{ error_message }}
+        </div>
+        {% endif %}
+
+        <input
+          type="url"
+          name="url"
+          placeholder="Ex: https://www.exemplo.com"
+          pattern="https?://.*"
+          title="A URL deve começar com http:// ou https://"
+          class="border border-gray-300 rounded-lg p-3 w-full focus:outline-none focus:ring-4 focus:ring-purple-400"
+          value="{{ request.POST.url }}"
+        />
+
+        <button
+          type="submit"
+          class="btn-animate bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:shadow-lg transform hover:-translate-y-1"
+        >
+          Gerar QR Code
+        </button>
+      </form>
+
+      {% if qr_code_base64 %}
+      <div class="text-center mt-4">
+        <h2 class="text-2sm font-semibold text-gray-700 mb-6">Seu QR Code:</h2>
+        <img
+          src="{{ qr_code_base64 }}"
+          alt="QR Code"
+          class="mx-auto rounded-lg border-4 border-purple-200 w-48 h-48 p-2 bg-white mb-6"
+        />
+
+        <div class="flex justify-center space-x-4">
+          <a
+            href="{{ qr_code_base64 }}"
+            download="qrcode.png"
+            class="btn-animate bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:shadow-lg transform hover:-translate-y-1"
+          >
+            Baixar QR Code
+          </a>
+
+          <a
+            href="/"
+            class="btn-animate bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:shadow-lg transform hover:-translate-y-1"
+          >
+            Gerar novo QR Code
+          </a>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </body>
+</html>
