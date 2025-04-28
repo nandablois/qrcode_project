@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: qrcode-app
+    runtime: python
+    plan: free
+    buildCommand: ""
+    startCommand: gunicorn qrcode_project.wsgi:application
